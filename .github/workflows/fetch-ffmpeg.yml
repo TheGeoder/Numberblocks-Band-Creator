@@ -1,0 +1,32 @@
+name: Download FFmpeg Core Assets
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-assets:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Ensure Directory Exists
+        run: mkdir -p src/extensions
+
+      - name: Fetch Full ffmpeg-core.js
+        run: curl -L -o src/extensions/ffmpeg-core.js "https://unpkg.com"
+
+      - name: Fetch Full ffmpeg-core.wasm
+        run: curl -L -o src/extensions/ffmpeg-core.wasm "https://unpkg.com"
+
+      - name: Commit Files to Repository
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@://github.com"
+          git add src/extensions/ffmpeg-core.js src/extensions/ffmpeg-core.wasm
+          git commit -m "Add full standalone ffmpeg-core files" || echo "No changes to commit"
+          git push
