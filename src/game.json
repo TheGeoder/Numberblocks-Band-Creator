@@ -57,17 +57,7 @@
       "v": 2,
       "uiLayersHeight": 720,
       "uiLayersWidth": 1280,
-      "objects": [
-        {
-          "type": "Sprite",
-          "name": "BlockPlaceholder",
-          "assetStoreId": "",
-          "animations": [],
-          "variables": [],
-          "effects": [],
-          "behaviors": []
-        }
-      ],
+      "objects": [],
       "layers": [
         {
           "ambientColor": "255;255;255",
