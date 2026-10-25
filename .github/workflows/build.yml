@@ -1,4 +1,4 @@
-name: Build Band Creator APK
+name: Build Android APK
 on:
   push:
     branches:
@@ -48,4 +48,4 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: Band-Creator-APK
-          path: cordova-project/platforms/android/app/build/outputs/apk/debug/Band-Creator.apk
+          path: "**/*.apk"
