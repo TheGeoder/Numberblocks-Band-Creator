@@ -1,0 +1,52 @@
+name: Build Android APK
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  compile-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (Latest Stable)
+        uses: actions/setup-node@v5
+        with:
+          node-version: 'lts/*'
+
+      - name: Setup Java JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK Setup
+        uses: android-actions/setup-android@v4
+
+      - name: Install GDevelop CLI & Cordova
+        run: npm install -g @gdevelop/cli cordova
+
+      - name: Export GDevelop Project to HTML5
+        run: gdexport export --platform web --input src/game.json --output build-output
+
+      - name: Create Cordova Android Shell Workspace
+        run: |
+          cordova create cordova-project com.numberblocks.bandcreator "Band Creator"
+          cd cordova-project
+          cordova platform add android
+          rm -rf www/*
+          cp -r ../build-output/* www/
+
+      - name: Compile to Android Build (APK)
+        run: |
+          cd cordova-project
+          cordova build android --debug
+
+      - name: Upload Final Android APK File
+        uses: actions/upload-artifact@v5
+        with:
+          name: Band-Creator-APK
+          path: cordova-project/platforms/android/app/build/outputs/apk/debug/Band-Creator.apk
